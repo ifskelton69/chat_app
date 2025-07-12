@@ -101,8 +101,6 @@ try {
 
 
 };
-<<<<<<< HEAD
-=======
 
 export const checkAuth = (req,res)=>{
   try {
@@ -113,4 +111,3 @@ export const checkAuth = (req,res)=>{
   }
 }
 
->>>>>>> cad0384 (checkAuth done)
