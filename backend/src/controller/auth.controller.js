@@ -101,3 +101,16 @@ try {
 
 
 };
+<<<<<<< HEAD
+=======
+
+export const checkAuth = (req,res)=>{
+  try {
+    res.status(200).json(req.user);//This will give you the authenticated user
+  } catch (error) {
+    console.log("Error in checkAuth controller",error.message);
+    res.status(500).json({message:"Internal Server Error"});
+  }
+}
+
+>>>>>>> cad0384 (checkAuth done)

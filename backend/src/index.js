@@ -8,11 +8,11 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5001;
 
+app.use(cookieparser());
 app.use(express.urlencoded({ extended: true })); // for x-www-form-urlencoded
 app.use(express.json()); // for JSON payloads
 app.use(express.json());
 app.use('/api/auth',authrouthes);
-app.use(cookieparser());
 
 app.listen(PORT,()=>{
     console.log("server is runnig :"+ PORT);
