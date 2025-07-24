@@ -9,6 +9,8 @@ import ProfilePage from './pages/profilePage.jsx'
 import { useAuth } from './store/useAuth.js'
 import { Loader } from "lucide-react"
 
+import {Toaster} from 'react-hot-toast'
+
 const App = () => {
   const { authUser, checkAuth, isCheckingAuth } = useAuth();
   useEffect(() => {
@@ -18,7 +20,7 @@ const App = () => {
   if (isCheckingAuth){
     return (
       <div className="flex items-center justify-center h-screen">
-        <Loader className="size-10 animate-spin" />
+        <Loader className="size-20 animate-spin" />
       </div>
     )};
   return (
@@ -31,6 +33,7 @@ const App = () => {
         <Route path='/settings' element={<SettingsPage />} />
         <Route path='/profile' element={authUser ? <ProfilePage /> : <Navigate to="/login" />} />
       </Routes>
+      <Toaster/>
     </div>
   )
 }

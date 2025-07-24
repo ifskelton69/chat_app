@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs'
 import { generateToken } from "../lib/utils.js";
 import cloudinary from "../lib/cloudinary.js";
 
-export const signup = async (req, res) => {
+export const signUp = async (req, res) => {
   const { fullname, email, password } = req.body;
   try {
     if (!fullname || !password || !email) {
