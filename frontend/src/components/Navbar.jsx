@@ -15,6 +15,7 @@ const Navbar = () => {
             <Link to="/" className="flex items-center gap-2.5 hover:opacity-80 translate-all">
               <div className='size-9 rounded-lg bg-primay/10 flex items-center justify-center'>
                 {/* <MessagesSquare className='w-5 h-5 text-green-500' /> */}
+                <img src="appchatlogo.png" className='w-7 h-7 '/>
               </div>
               <h1 className='text-lg font-bold'>QuickChat</h1>
             </Link>
