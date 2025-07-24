@@ -57,6 +57,20 @@ export const useAuth = create((set, get) => ({
     }
   },
 
+  logout: async () => {
+    try {
+      await axiosInstance.post("/auth/logout");
+      set({ authUser: null });
+      toast.success("Logged out successfully");
+      // get().disconnectSocket(); // Comment out until socket is properly set up
+    } catch (error) {
+      console.error("Logout error:", error);
+      // Even if logout fails, clear local state
+      set({ authUser: null });
+      toast.error("Logout failed, but cleared local session");
+    }
+  },
+  
   login: async (data) => {
     set({ isLoggingIn: true });
     try {
@@ -84,19 +98,6 @@ export const useAuth = create((set, get) => ({
     }
   },
 
-  logout: async () => {
-    try {
-      await axiosInstance.post("/auth/logout");
-      set({ authUser: null });
-      toast.success("Logged out successfully");
-      // get().disconnectSocket(); // Comment out until socket is properly set up
-    } catch (error) {
-      console.error("Logout error:", error);
-      // Even if logout fails, clear local state
-      set({ authUser: null });
-      toast.error("Logout failed, but cleared local session");
-    }
-  },
 
   updateProfile: async (data) => {
     set({ isUpdatingProfile: true });
