@@ -14,7 +14,7 @@ const Navbar = () => {
           <div>
             <Link to="/" className="flex items-center gap-2.5 hover:opacity-80 translate-all">
               <div className='size-9 rounded-lg bg-primay/10 flex items-center justify-center'>
-                <MessagesSquare className='w-5 h-5 text-green-500' />
+                {/* <MessagesSquare className='w-5 h-5 text-green-500' /> */}
               </div>
               <h1 className='text-lg font-bold'>QuickChat</h1>
             </Link>

@@ -83,8 +83,8 @@ export const logout = (req, res) => {
   }
 };//logout 
 
-export const updateprofile = async (req, res) => {
-try {
+export const updateProfile = async (req, res) => {
+  try {
     const { profilepic } = req.body;
     const userId = req.user._id;
     if (!profilepic) {
@@ -92,21 +92,24 @@ try {
     }
     const uploadresponse = await cloudinary.uploader.upload(profilepic);//if you provide profile picture then we will upload it 
     const updatedUser = await User.findByIdAndUpdate(userId, { profilepic: uploadresponse.secure_url }, { new: true });
+    console.log("Received profilepic:", profilepic?.slice(0, 30)); // Print beginning of base64
+    console.log("User ID:", userId);
+
     res.status(200).json(updatedUser);
   } catch (error) {
     console.log("Error in update profile : ", error.message);
-    res.status(500).json({message:"Internal server Error"});
+    res.status(500).json({ message: "Internal server Error" });
   }
 
 
 };
 
-export const checkAuth = (req,res)=>{
+export const checkAuth = (req, res) => {
   try {
     res.status(200).json(req.user);//This will give you the authenticated user
   } catch (error) {
-    console.log("Error in checkAuth controller",error.message);
-    res.status(500).json({message:"Internal Server Error"});
+    console.log("Error in checkAuth controller", error.message);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 }
 
