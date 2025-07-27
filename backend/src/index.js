@@ -22,7 +22,7 @@ app.get('/api/test', (req, res) => {
     res.send(req.cookies); // Should show jwt
 });
 app.use('/api/auth', authroutes);
-app.use('/api/message', messageroutes);
+app.use('/api/messages', messageroutes);
 
 app.listen(PORT, () => {
     console.log("server is runnig :" + PORT);

@@ -11,6 +11,7 @@ const PREVIEW_MESSAGES = [
 
 const SettingsPage = () => {
   const { theme, setTheme } = useTheme();
+  
 
   return (
     <div className='min-h-screen pt-20 pb-10'>
@@ -19,12 +20,13 @@ const SettingsPage = () => {
           {/* Header */}
           <div className='text-center space-y-2'>
             <div className='flex items-center justify-center gap-2 mb-4'>
-              <Palette className='w-8 h-8 text-primary' />
+              <Palette className='w-8 h-8 text-green-500' />
               <h1 className='text-3xl font-bold'>Appearance Settings</h1>
             </div>
             <p className='text-base-content/70 text-lg'>
               Customize your chat experience with beautiful themes
             </p>
+            <p className=''></p>
           </div>
 
           {/* Current Theme Info */}
@@ -110,83 +112,9 @@ const SettingsPage = () => {
               ))}
             </div>
           </div>
-
-          {/* Popular Themes Section */}
-          <div className='bg-base-200 rounded-2xl p-6'>
-            <h3 className='text-lg font-semibold mb-4'>Popular Themes</h3>
-            <div className='grid grid-cols-2 md:grid-cols-4 gap-4'>
-              {['dark', 'light', 'dracula', 'cyberpunk'].map((popularTheme) => (
-                <button
-                  key={popularTheme}
-                  className={`
-                    flex items-center gap-3 p-3 rounded-lg transition-all
-                    ${theme === popularTheme 
-                      ? "bg-primary text-primary-content" 
-                      : "bg-base-100 hover:bg-base-300"
-                    }
-                  `}
-                  onClick={() => setTheme(popularTheme)}
-                >
-                  <div className='w-6 h-6 rounded-full' data-theme={popularTheme}>
-                    <div className='w-full h-full rounded-full bg-primary'></div>
-                  </div>
-                  <span className='font-medium'>
-                    {popularTheme.charAt(0).toUpperCase() + popularTheme.slice(1)}
-                  </span>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Theme Categories */}
-          <div className='grid md:grid-cols-2 gap-6'>
-            {/* Light Themes */}
-            <div className='bg-base-200 rounded-2xl p-6'>
-              <h3 className='text-lg font-semibold mb-4'>Light Themes</h3>
-              <div className='space-y-2'>
-                {['light', 'cupcake', 'bumblebee', 'emerald', 'corporate', 'garden', 'lofi', 'pastel', 'fantasy', 'wireframe', 'cmyk', 'autumn', 'acid', 'lemonade', 'winter'].map((lightTheme) => (
-                  <button
-                    key={lightTheme}
-                    className={`
-                      w-full text-left px-3 py-2 rounded-lg transition-all
-                      ${theme === lightTheme 
-                        ? "bg-primary text-primary-content" 
-                        : "hover:bg-base-100"
-                      }
-                    `}
-                    onClick={() => setTheme(lightTheme)}
-                  >
-                    {lightTheme.charAt(0).toUpperCase() + lightTheme.slice(1)}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Dark Themes */}
-            <div className='bg-base-200 rounded-2xl p-6'>
-              <h3 className='text-lg font-semibold mb-4'>Dark Themes</h3>
-              <div className='space-y-2'>
-                {['dark', 'synthwave', 'retro', 'cyberpunk', 'valentine', 'halloween', 'forest', 'aqua', 'black', 'luxury', 'dracula', 'business', 'night', 'coffee', 'dim', 'nord', 'sunset'].map((darkTheme) => (
-                  <button
-                    key={darkTheme}
-                    className={`
-                      w-full text-left px-3 py-2 rounded-lg transition-all
-                      ${theme === darkTheme 
-                        ? "bg-primary text-primary-content" 
-                        : "hover:bg-base-100"
-                      }
-                    `}
-                    onClick={() => setTheme(darkTheme)}
-                  >
-                    {darkTheme.charAt(0).toUpperCase() + darkTheme.slice(1)}
-                  </button>
-                ))}
-              </div>
-            </div>
           </div>
         </div>
       </div>
-    </div>
   )
 }
 
