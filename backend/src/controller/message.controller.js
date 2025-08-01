@@ -34,29 +34,43 @@ export const getMessages = async (req, res) => {
     }
 };
 
-export const sendMessages = async(req,res)=>{
+export const sendMessages = async (req, res) => {
     try {
-        const {text,image} = req.body;
-        const {id:receiverId} = req.params;
-        const {id:senderId} = req.user._id;
+        const { text, image } = req.body;
+        const { id: receiverId } = req.params;
+        const senderId = req.user._id; // Fix: Remove destructuring, use direct access
 
-        let imageurl;
-        if(image){
-            //upload base64 image to cloudinary
-            const uploadRespose = await cloudinary.uploader.upload(image);
-            imageurl= uploadRespose.secure_url;
+        // Validation: Check if at least text or image is provided
+        if (!text && !image) {
+            return res.status(400).json({ message: "Message must contain text or image" });
         }
+
+        let imageUrl;
+        if (image) {
+            try {
+                // Upload base64 image to cloudinary
+                const uploadResponse = await cloudinary.uploader.upload(image);
+                imageUrl = uploadResponse.secure_url;
+            } catch (uploadError) {
+                console.log("Error uploading image to cloudinary: ", uploadError.message);
+                return res.status(400).json({ message: "Failed to upload image" });
+            }
+        }
+
         const newMessage = new Message({
             senderId,
             receiverId,
             text,
-            image:imageurl,
+            image: imageUrl,
         });
+
         await newMessage.save();
-        //todo : realtime functionallity socket.io
-        res.status(200).json(newMessage)
+        
+        // TODO: realtime functionality socket.io
+        res.status(201).json(newMessage); // 201 for created resource
+        
     } catch (error) {
-        console.log("Error in sendMessage controller : ",error.message);
-        res.status(500).json({message:"Internal Server Error"});
+        console.log("Error in sendMessage controller: ", error.message);
+        res.status(500).json({ message: "Internal Server Error" });
     }
 };
