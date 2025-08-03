@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useChat } from '../store/useChat';
 import ChatHeader from './ChatHeader';
 import MessagesInput from './MessagesInput';
@@ -7,8 +7,18 @@ import { useAuth } from '../store/useAuth';
 import { formatDateLabel, shouldShowDateSeparator } from '../lib/utils';
 
 const ChatContainer = () => {
-  const { messages = [], getMessages, isMessagesLoading, selectedUser } = useChat();
+  // FIXED: Use correct function names
+  const { 
+    messages = [], 
+    getMessages, 
+    isMessagesLoading, 
+    selectedUser, 
+    listenToNewMessages, // Fixed function name
+    unsubscribeFromMessages // Fixed function name
+  } = useChat();
+  
   const { authUser } = useAuth();
+  const messageEndRef = useRef(null);
 
   // Debug logs
   console.log('messages:', messages);
@@ -16,11 +26,26 @@ const ChatContainer = () => {
   console.log('isMessagesLoading:', isMessagesLoading);
 
   useEffect(() => {
-    if (selectedUser?._id) {
-      console.log('Fetching messages for user:', selectedUser._id);
-      getMessages(selectedUser._id);
+    if (!selectedUser?._id) return;
+    
+    console.log("Setting up chat for user:", selectedUser._id);
+    
+    // Get messages and setup real-time listening
+    getMessages(selectedUser._id);
+    listenToNewMessages();
+    
+    // Cleanup function
+    return () => {
+      console.log("Cleaning up chat listeners");
+      unsubscribeFromMessages();
+    };
+  }, [selectedUser?._id, getMessages, listenToNewMessages, unsubscribeFromMessages]);
+
+  useEffect(() => {
+    if (messageEndRef.current && messages.length > 0) {
+      messageEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [selectedUser?._id, getMessages]);
+  }, [messages]);
 
   if (isMessagesLoading) {
     return (
@@ -47,9 +72,13 @@ const ChatContainer = () => {
                   </div>
                 </div>
               )}
-              
+
               {/* Message */}
-              <div className={`chat ${message.senderId === authUser?._id ? 'chat-end' : 'chat-start'}`}>
+              <div 
+                className={`chat ${message.senderId === authUser?._id ? 'chat-end' : 'chat-start'}`}
+                // FIXED: Only add ref to the last message
+                ref={index === messages.length - 1 ? messageEndRef : null}
+              >
                 <div className='chat-image avatar'>
                   <div className='size-10 rounded-full border'>
                     <img

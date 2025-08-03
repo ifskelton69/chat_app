@@ -13,9 +13,11 @@ import { Loader } from "lucide-react"
 import { Toaster } from 'react-hot-toast'
 
 const App = () => {
-  const { authUser, checkAuth, isCheckingAuth } = useAuth();
+  const { authUser, checkAuth, isCheckingAuth,onlineUsers } = useAuth();
   const { theme } = useTheme();
 
+  console.log({onlineUsers});
+  
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);

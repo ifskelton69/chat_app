@@ -24,6 +24,7 @@ const SideBar = () => {
                     <Users className='size-6' />
                     <span className='font-medium hidden lg:block'>Contacts</span>
                 </div>
+                
             </div>
 
             {/* Users List */}

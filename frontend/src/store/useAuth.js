@@ -1,9 +1,9 @@
 import { create } from "zustand";
 import { axiosInstance } from "../lib/axios.js";
 import toast from "react-hot-toast";
-// import { io } from "socket.io-client";
+import { io } from "socket.io-client";
 
-// const BASE_URL = import.meta.env.MODE === "development" ? "http://localhost:5001" : "/";
+const BASE_URL = import.meta.env.MODE === "development" ? "http://localhost:5001" : "/";
 
 export const useAuth = create((set, get) => ({
   authUser: null,
@@ -18,10 +18,9 @@ export const useAuth = create((set, get) => ({
     try {
       const res = await axiosInstance.get("/auth/check");
       set({ authUser: res.data });
-      // get().connectSocket(); // Comment out until socket is properly set up
+      get().connectSocket(); // SOCKET connection
     } catch (error) {
       console.log("Error in checkAuth:", error);
-      // Don't show error for checkAuth - it's expected when not logged in
       set({ authUser: null });
     } finally {
       set({ isCheckingAuth: false });
@@ -31,15 +30,13 @@ export const useAuth = create((set, get) => ({
   signUp: async (data) => {
     set({ isSigningUp: true });
     try {
-      // Try different endpoint variations based on your backend
-      const res = await axiosInstance.post("/auth/signup", data); // Changed from signUp to signup
+      const res = await axiosInstance.post("/auth/signup", data);
       set({ authUser: res.data });
       toast.success("Account created successfully");
-      // get().connectSocket(); // Comment out until socket is properly set up
+      get().connectSocket(); //socket connection 
     } catch (error) {
       console.error("SignUp error:", error);
       
-      // Better error handling
       let errorMessage = "Signup failed";
       if (error.response?.data?.message) {
         errorMessage = error.response.data.message;
@@ -62,7 +59,7 @@ export const useAuth = create((set, get) => ({
       await axiosInstance.post("/auth/logout");
       set({ authUser: null });
       toast.success("Logged out successfully");
-      // get().disconnectSocket(); // Comment out until socket is properly set up
+      get().disconnectSocket(); // socket disconnection
     } catch (error) {
       console.error("Logout error:", error);
       // Even if logout fails, clear local state
@@ -77,7 +74,7 @@ export const useAuth = create((set, get) => ({
       const res = await axiosInstance.post("/auth/login", data);
       set({ authUser: res.data });
       toast.success("Logged in successfully");
-      // get().connectSocket(); // Comment out until socket is properly set up
+      get().connectSocket(); //socket connection 
     } catch (error) {
       console.error("Login error:", error);
       
@@ -97,7 +94,6 @@ export const useAuth = create((set, get) => ({
       set({ isLoggingIn: false });
     }
   },
-
 
   updateProfile: async (data) => {
     set({ isUpdatingProfile: true });
@@ -119,46 +115,41 @@ export const useAuth = create((set, get) => ({
     }
   },
 
-  // Temporarily disable socket functions until properly configured
+  // FIXED: Enable socket connection
   connectSocket: () => {
-    console.log("Socket connection disabled - uncomment and configure when ready");
-    /*
     const { authUser } = get();
     if (!authUser || get().socket?.connected) return;
 
+    console.log("Connecting socket for user:", authUser._id);
+    
     const socket = io(BASE_URL, {
       query: {
         userId: authUser._id,
       },
     });
-    socket.connect();
 
     set({ socket: socket });
 
+    socket.on("connect", () => {
+      console.log("Socket connected:", socket.id);
+    });
+
     socket.on("getOnlineUsers", (userIds) => {
+      console.log("Online users:", userIds);
       set({ onlineUsers: userIds });
     });
-    */
+
+    socket.on("disconnect", () => {
+      console.log("Socket disconnected");
+    });
   },
   
   disconnectSocket: () => {
-    console.log("Socket disconnection disabled - uncomment and configure when ready");
-    /*
-    if (get().socket?.connected) get().socket.disconnect();
-    */
-  },
-
-  // Add a test function to check server connectivity
-  testConnection: async () => {
-    try {
-      const res = await axiosInstance.get("/health");
-      console.log("✅ Server connection OK:", res.data);
-      toast.success("Server connection successful");
-      return true;
-    } catch (error) {
-      console.error("❌ Server connection failed:", error);
-      toast.error("Cannot connect to server - check if backend is running");
-      return false;
+    const socket = get().socket;
+    if (socket?.connected) {
+      console.log("Disconnecting socket");
+      socket.disconnect();
+      set({ socket: null });
     }
-  }
+  }, 
 }));
